@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { HiMenu } from 'react-icons/hi';
 import { AiFillCloseCircle } from 'react-icons/ai';
-import {Link, Route, Routes} from 'react-router-dom';
+import {Link, Route, Routes, useNavigate} from 'react-router-dom';
 
 
 import {Carousel, EditBg, EditPin, Sidebar, UserProfile} from '../components';
@@ -19,10 +19,15 @@ const Home = () => {
   const [user, setUser] = useState(null);
   const [post, setPost] = useState(null);
   const scrollRef = useRef(null);
+  const navigate = useNavigate();
   const userInfo = fetchUser();
 
   useEffect(() => {
     const query = userQuery(userInfo?.sub);
+
+    if(!query) {
+      navigate('/login');
+    }
 
     client.fetch(query)
       .then((data) => [

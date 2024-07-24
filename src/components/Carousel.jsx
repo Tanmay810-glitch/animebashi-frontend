@@ -57,7 +57,7 @@ const Carousel = () => {
   return (
         <>
             <h1 className='text-3xl text-white font-bold my-4 ml-3'>Anime & Manga News fresh out of the oven!</h1>
-            <swiper-container slides-per-view="2" speed="150" autoplay="true" pagination="true"
+            <swiper-container slides-per-view="2" speed="150" autoplay="true" pagination="false"
             loop={`${carouselImages?.length > 3 ? "true" : "false"}`} css-mode="true">
               {/* {pins?.map((pin) => <Pin key={pin._id} pin={pin} className="w-max" />)} */}
               {carouselImages?.map((data, index) => <swiper-slide key={index}><Link to={`/category/${data.category}`}><img className='rounded-xl pl-2' src={`${data?.image?.asset?.url}`} alt="" /></Link></swiper-slide>)}
