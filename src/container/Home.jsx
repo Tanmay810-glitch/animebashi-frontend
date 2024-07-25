@@ -32,9 +32,10 @@ const Home = () => {
     client.fetch(query)
       // Process the query
       .then((data) => {
-        // And then if we get the information about the user in return, then that means the user has already logged
+        // And then if we get the information about the user in return, then that means the user has already logged in
         if(data[0]){
           setUser(data[0]);
+          console.log(data[0])
         } else {
           // If what we get is undefined, then that means the user has not logged in. In which case, navigate them to the login page.
           navigate('/login');
@@ -84,7 +85,7 @@ const Home = () => {
       <div className='pb-2 bg-[#393c54] flex-2 h-screen w-full overflow-y-scroll' ref={scrollRef}>
 
         <Routes>
-          <Route path='/user-profile/:userId' element={<UserProfile />} />
+          <Route path='/user-profile/:userId' element={<UserProfile currentUser={user} />} />
           <Route path="/EditBg" element={<EditBg user={user} />} />
           <Route path='/*' element={<Pins user={user && user} />} />
           <Route path='/*' element={<Pins user={user && user} />} />

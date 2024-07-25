@@ -154,7 +154,7 @@ const PinDetail = ({user}) => {
                     {/* Render Profile pic of the poster */}
                     <img
                       src={item.postedBy?.image}
-                      className="w-10 h-10 rounded-full cursor-pointer"
+                      className="w-10 h-10 rounded-full"
                       alt="user-profile"
                     />
 
@@ -167,14 +167,14 @@ const PinDetail = ({user}) => {
                 ))}
           </div>
 
-          {/* Renders the comment field (The pic of the poster, input field, and the button for posting the comment) */}
+          {/* Renders the comment input field (The pic of the poster, input field, and the button for posting the comment) */}
           <div className='flex flex-wrap mt-6 gap-3'>
 
             {/* Renders the profile pic of the user who is posting the comment, and provides a link to their profile */}
-            <Link to={`/user-profile/${pinDetail.postedBy?._id}`}>
+            <Link to={`/user-profile/${user._id}`}>
               <img 
                 className='w-10 h-10 rounded-full cursor-pointer'
-                src={pinDetail.postedBy?.image}
+                src={user?.image}
                 alt='user-profile'
               />
             </Link>

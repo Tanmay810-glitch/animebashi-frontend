@@ -13,10 +13,10 @@ const randomImage = 'https://source.unsplash.com/1600x900/?nature,photography,te
 const activeBtnStyles = "bg-[#06A7F7] text-white font-bold p-2 rounded-full w-20 transition duration-500 outline-none";
 const notActiveBtnStyles = "bg-primary text-white font-bold p-2 rounded-full w-20 transition duration-500 outline-none";
 
-const UserProfile = () => {
+const UserProfile = ({currentUser}) => {
 
   const [user, setUser] = useState(null);
-  const [pins, setPins] = useState(null);
+  const [pins, setPins] = useState(null); 
   const [userBg, setUserBg] = useState(null);
   const [text, setText] = useState('Created');
   const [activeBtn, setActiveBtn] = useState('created');
@@ -33,6 +33,7 @@ const UserProfile = () => {
         setUser(data[0]);
       })
   }, [userId])
+
 
   // For fetching user created/saved pins
   useEffect(() => {
@@ -55,13 +56,15 @@ const UserProfile = () => {
 
   // For fetching user bg
   useEffect(() => {
-    const query = userBgQuery(userId);
+
+      const query = userBgQuery(userId);
   
-    client.fetch(query)
-      .then((data) => {
-        // console.log("Following are the contents of user bg: ",data);
-        setUserBg(data[0]);
-      })
+      client.fetch(query)
+        .then((data) => {
+          setUserBg(data[0])
+          
+        })
+    
 
   }, [userId])
 
@@ -95,7 +98,7 @@ const UserProfile = () => {
           <div className='flex flex-col justify-center items-center'>
             {/* The main bg image */}
             <img 
-              src={userBg?.image?.asset?.url}
+              src={userBg ? userBg?.image?.asset?.url : 'https://images.unsplash.com/photo-1721539584859-9fea914ae2fe?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'}
               className='w-screen h-370 shadow-lg object-cover'
               alt='banner-pic'
             />
@@ -114,7 +117,7 @@ const UserProfile = () => {
 
             {/* If the user is logged in, then render a log out button for them */}
             <div className='absolute top-0 z-1 right-0 p-2'>
-              {userId === user._id && (
+              {userId === currentUser._id && (
                 <button 
                 className='bg-white p-2 rounded-full cursor-pointer shadow-empty'
                   onClick={handleLogout}
@@ -127,7 +130,7 @@ const UserProfile = () => {
 
             {/* If the user is logged in, then render an edit button to change the main bg */}
             <div className='absolute top-0 z-1 left-0 p-2'>
-              {userId === user._id && (
+              {userId === currentUser._id && (
                 <button 
                 className='bg-white p-2 rounded-full cursor-pointer shadow-empty'
                   onClick={handleEditBg}
@@ -156,6 +159,7 @@ const UserProfile = () => {
                 Created
               </button>
 
+              {/* TODO: Add a "Save post" feature */}
               <button
                 type='button'
                 onClick={(e) => {
@@ -177,8 +181,8 @@ const UserProfile = () => {
               <MasonryLayout pins={pins} />
             </div>
           ) : (
-            <div className='flex justify-center font-bold items-center w-full text-xl mt-2'>
-              No Pins Found
+            <div className='flex justify-center font-bold items-center text-white w-full text-xl mt-2'>
+              Feature under development!
             </div>
           )}
 
