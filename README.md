@@ -38,5 +38,9 @@ I'm currently facing problems in the edit post feature. The specifics of it are 
 
 Allows you to delete your post
 
+## Save post
+
+Allows you to save any post you like, for later viewing.
+
 **Note: Attribution is provided for post pics and carousel pics that are not mine**
 
