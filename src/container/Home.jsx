@@ -22,17 +22,24 @@ const Home = () => {
   const navigate = useNavigate();
   const userInfo = fetchUser();
 
+  // Handles the log in mechanism. If the user is not logged in, it will navigate them to the login screen.
+  // If they are already logged in, it will show them the home screen
   useEffect(() => {
+    // Create a query asking information about the user
     const query = userQuery(userInfo?.sub);
 
-    if(!query) {
-      navigate('/login');
-    }
-
+    // After we get the results from the query
     client.fetch(query)
-      .then((data) => [
-        setUser(data[0])
-      ])
+      // Process the query
+      .then((data) => {
+        // And then if we get the information about the user in return, then that means the user has already logged
+        if(data[0]){
+          setUser(data[0]);
+        } else {
+          // If what we get is undefined, then that means the user has not logged in. In which case, navigate them to the login page.
+          navigate('/login');
+        }
+      })
   }, [])
 
   useEffect(() => {
