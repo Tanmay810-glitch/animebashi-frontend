@@ -35,7 +35,7 @@ const Home = () => {
         // And then if we get the information about the user in return, then that means the user has already logged in
         if(data[0]){
           setUser(data[0]);
-          console.log(data[0])
+          // console.log(data[0])
         } else {
           // If what we get is undefined, then that means the user has not logged in. In which case, navigate them to the login page.
           navigate('/login');

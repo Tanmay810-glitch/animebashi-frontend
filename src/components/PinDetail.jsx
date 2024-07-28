@@ -7,7 +7,7 @@ import {client, urlFor} from '../client'
 import MasonryLayout from './MasonryLayout';
 import { pinDetailMorePinQuery, pinDetailQuery } from '../utils/data';
 import Spinner from './Spinner';
-import { AiFillEdit } from 'react-icons/ai';
+import { AiFillEdit, AiOutlineLogout } from 'react-icons/ai';
 
 const PinDetail = ({user}) => {
 
@@ -15,6 +15,7 @@ const PinDetail = ({user}) => {
   const [pinDetail, setPinDetail] = useState(null);
   const [comment, setComment] = useState('');
   const [addingComment, setAddingComment] = useState(false);
+  const [pinUserId, setPinUserId] = useState(null)
   const navigate = useNavigate();
   const { pinId } = useParams();
   const { userId } = useParams();
@@ -43,7 +44,7 @@ const PinDetail = ({user}) => {
       client.fetch(query)
         .then((data) => {
           setPinDetail(data[0]);
-
+          setPinUserId(data[0].postedBy._id)
 
           if(data[0]) {
             query = pinDetailMorePinQuery(data[0]);
@@ -71,18 +72,11 @@ const PinDetail = ({user}) => {
       {/* Render the whole pin detail page  */}
       <div className='flex xl:flex-column flex-col m-auto bg-[#2A2C3E]' style={{maxWidth: '1500px', borderRadius: '32px'}}>
 
-          {/* Render the edit button */}
-          {/* <div 
-            className='absolute bg-white p-2 right-12 top-28 rounded-full cursor-pointer shadow-empty'
-            onClick={() => navigate(`/pin-edit/${pinId}`)}
-            >
-            <Link to={'/EditPin'}>
-              <AiFillEdit color='grey'fontSize={21}/>
-            </Link>
-          </div> */}
+
     
         {/* Render the pin */}
-        <div className='flex justify-center items-center md:items-start flex-initial'>
+        <div className='flex relative justify-center items-center md:items-start flex-initial'>
+
 
 
           <img 
@@ -90,6 +84,18 @@ const PinDetail = ({user}) => {
             className='rounded-t-3xl rounded-b-lg w-full'
             alt='user-post'
           />
+          {/* Render the edit button only for the user who created it. */}
+          {pinUserId === user._id && 
+          <div 
+            className='absolute top-2 right-2 z-1000  bg-white p-2 rounded-full cursor-pointer shadow-md'
+            onClick={() => navigate(`/pin-edit/${pinId}`)}
+            >
+            <Link to={'/EditPin'}>
+              <AiFillEdit color='grey'fontSize={21}/>
+            </Link>
+          </div>}
+
+    
         </div>
 
         {/* Render the pin and user details, and the comment section */}

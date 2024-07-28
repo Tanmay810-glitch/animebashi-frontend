@@ -11,10 +11,16 @@ import { categories } from '../utils/data';
 
 const EditBg = ({ user }) => {
 
+  // For displaying the loader. It will be displayed when the value of loading is set to true.
   const [loading, setLoading] = useState(false);
+
+   // If the save button is clicked but the image is not uploaded, the fields hook value will be set to true, and a warning telling the user to fill all the fields will appear 
   const [fields, setFields] = useState(false);
-  const [category, setCategory] = useState(null);
+
+  // Will hold the image the user wants to upload
   const [imageAsset, setImageAsset] = useState(null);
+
+  // If the image the user uploaded doesn't match any of the specified image types, a warning telling the user that the uploaded image format is invalid, will appear.
   const [wrongImageType, setWrongImageType] = useState(false);
 
   // We use this hook in this particular code, to navigate to the feed page once the "save button" is clicked.
@@ -59,12 +65,11 @@ const EditBg = ({ user }) => {
       Algorithm for ensuring that there is only one bg in the database for each user:
 
       1. Check if the user has uploaded the pic
-      2. Create the doc to be submitted to the database
-      3. Use the user_bg query
+      2. If the user has uploaded the pic, create the doc to be submitted to the database
+      3. Use the user_bg query for fetching the bg wallpaper of the user.
       4. If the user_bg query returns something, it means that a bg already exists. In which case, 
-         replace it.
-      5. If the user_bg query returns nothing, it means that there is no bg for the user in the db. In which
-         case, submit it normally. 
+         we need to replace it.
+      5. If the user_bg query returns nothing, it means that there is no bg for the user in the db. In which case, we submit it normally. 
     */
 
 
@@ -110,15 +115,15 @@ const EditBg = ({ user }) => {
           .set(doc)
           .commit()
           .then(() => {
-            // Successfully updated the background
+            // Successfully updated the background so we head back to the home page
             navigate('/');
           })
           .catch((error) => {
-            // Handle error
+            // Handle error in case it isn't successfully updated
             console.error('Error updating background:', error);
           });  
         } else {
-          // Or else we simply do it the normal way...
+          // If we are in this block, then that means the user_bg for this user doesn't exist. In which case, we simply do it the normal way...
           client.create(doc)
           .then(() => {
             // And then we navigate back to home.
@@ -127,13 +132,12 @@ const EditBg = ({ user }) => {
         }
       })
 
-      
-
-
-
-
+  
     } else {
       // If the user clicks the submit button, but the fields are empty, we set the "fields" state to true, which will trigger the "Please fill all the details in the form" message... 
+
+      // (Though here it isn't actually needed because the save button will only appear once the user has uploaded the image (along with the delete button for the option of deleting it to set a new one))
+
       setFields(true);
 
       // For a duration of 2 seconds.
@@ -143,7 +147,7 @@ const EditBg = ({ user }) => {
 
   return (
 
-    // Renders two things: A message in case all the fields aren't filled when the submit button is clicked, and the whole "Create Pin" form.
+    // Renders two things: A message in case all the fields aren't filled when the submit button is clicked, and the box for uploading the image.
     <div className='flex flex-col justify-center items-center mt-5 lg:h-4/5'>
 
       {/* CreatePin: If the fields are empty when clicking the "save pin" button, then the "Please fill in all the fields" message will show */}

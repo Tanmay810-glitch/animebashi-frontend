@@ -9,21 +9,35 @@ import Spinner from './Spinner';
 import { categories } from '../utils/data';
 
 const CreatePin = ({ user }) => {
-
+  // Will hold the title of the post
   const [title, setTitle] = useState('');
+
+  // Will hold the description of the post
   const [about, setAbout] = useState('');
-  const [textareaHeight, setTextareaHeight] = useState(1);
-  const [destination, setDestination] = useState('');
+
+  
+  // const [textareaHeight, setTextareaHeight] = useState(1);
+  // const [destination, setDestination] = useState('');
+
+  // For displaying the loader. It will be displayed when the value of loading is set to true.
   const [loading, setLoading] = useState(false);
+
+  // If the submit button is clicked but one or more fields of the form are empty, the fields hook value will be set to true, and a warning telling the user to fill all the fields will appear 
   const [fields, setFields] = useState(false);
+
+  // Will hold the category of the post
   const [category, setCategory] = useState(null);
+
+  // Will hold the image the user wants to upload
   const [imageAsset, setImageAsset] = useState(null);
+
+  // If the image the user uploaded doesn't match any of the specified image types, a warning telling the user that the uploaded image format is invalid, will appear.  
   const [wrongImageType, setWrongImageType] = useState(false);
 
   // We use this hook in this particular code, to navigate to the feed page once the "save button" is clicked.
   const navigate = useNavigate();
 
-  // Function for uploading the image, when the user clicks "Upload Button".
+  // Function for displaying the image to the user as a preview, when the user clicks "Upload Button".
   const uploadImage = (e) => {
 
     // Extract the type and name of the uploaded file
@@ -118,7 +132,7 @@ const CreatePin = ({ user }) => {
       {/* For rendering the whole "Create Pin" form */}
       <div className='flex lg:flex-col flex-col rounded-lg justify-center items-center bg-[#2A2C3E]  lg:p-5 p-3 w-full'>
 
-        {/* Renders the left side of the "Create Pin" block (The "upload image" button) */}
+        {/* Renders the upper side of the "Create Pin" block (The "upload image" button) */}
         <div className='bg-[#393c54] p-3 flex flex-0.7 rounded-lg w-full'>
           <div className='flex justify-center items-center flex-col border-2 border-dotted rounded-lg  border-gray-300 p-3 w-full h-420'>
 
@@ -171,7 +185,7 @@ const CreatePin = ({ user }) => {
         </div>
 
 
-        {/* Renders the right side of the "Create Pin" block (Title, about, category selection, etc...) */}
+        {/* Renders the lower side of the "Create Pin" block (Title, about, category selection, etc...) */}
         <div className='flex flex-1 flex-col gap-6 lg:pl-5 mt-5 w-full'>
 
           {/* For entering the title of the post */}

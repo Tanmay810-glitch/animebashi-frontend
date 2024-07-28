@@ -10,37 +10,68 @@ import { categories, pinDetailQuery } from '../utils/data';
 
 const EditPin = ({ user }) => {
 
+  // Will hold the title of the post
   const [title, setTitle] = useState('');
+
+  // Will hold the description of the post
   const [about, setAbout] = useState('');
-  const [destination, setDestination] = useState('');
+
+  
+  // const [textareaHeight, setTextareaHeight] = useState(1);
+  // const [destination, setDestination] = useState('');
+
+  // For displaying the loader. It will be displayed when the value of loading is set to true.
   const [loading, setLoading] = useState(false);
+
+  // If the submit button is clicked but one or more fields of the form are empty, the fields hook value will be set to true, and a warning telling the user to fill all the fields will appear 
   const [fields, setFields] = useState(false);
+
+  // Will hold the category of the post
   const [category, setCategory] = useState(null);
+
+  // Will hold the image the user wants to upload
   const [imageAsset, setImageAsset] = useState(null);
+
+  // If the image the user uploaded doesn't match any of the specified image types, a warning telling the user that the uploaded image format is invalid, will appear.  
   const [wrongImageType, setWrongImageType] = useState(false);
+
+  // This will help in displaying the image after the user clicks on the edit button and views the current state of post before editing it
+  const [justClickedEdit, setJustClickedEdit] = useState(false);
 
   // We use this hook in this particular code, to navigate to the feed page once the "save button" is clicked.
   const navigate = useNavigate();
 
+  // The ID of the pin you'll want to edit, will be visible in the url bar. We grab that ID from there.
   const { pinId } = useParams();
 
+  // On page load...
   useEffect((e) => {
+    // We send a query to grab the details of the pin...
     const query = pinDetailQuery(pinId);
 
+    setJustClickedEdit(true)
+
+    // Once we get the results of the query, we process it...
     client.fetch(query)
       .then((data) => {
+          // And then set the respective fields to those details
           setTitle(data[0].title);
           setAbout(data[0].about);
           setCategory(data[0].category);
-          setImageAsset(data[0]?.image);
-          // console.log(data[0])
+          setImageAsset(data[0]?.image?.asset?.url);
+          console.log(data[0]?.image)
         });
+
+
   }, [pinId])
 
 
 
   // Function for uploading the image, when the user clicks "Upload Button".
   const uploadImage = (e) => {
+
+    // This will allow us to get the user uploaded image to appear as preview
+    setJustClickedEdit(false);
 
     // Extract the type and name of the uploaded file
     const {type, name} = e.target.files[0];
@@ -71,17 +102,16 @@ const EditPin = ({ user }) => {
     }
   }
 
-  // Function for submitting the pin to the Sanity database.
+  // Function for submitting the edited pin to the Sanity database.
   const savePin = () => {
 
     // If all the fields are filled...
-    if(title && about && destination && imageAsset && category) {
+    if(title && about && imageAsset && category) {
       // We use the data from the fields... 
       const doc = {
         _type: 'pin',
         title,
         about,
-        destination,
         image: {
           _type: 'image',
           asset: {
@@ -108,12 +138,16 @@ const EditPin = ({ user }) => {
       //     navigate('/')
       //   })
 
+      // Patch - Find the document to be edited with the help of it's ID
+      // Set - set the value of the document to the updated values
+      // Commit - Save the changes 
       client
       .patch(pinId)
       .set(doc)
       .commit()
       .then(() => {
-        // Successfully updated the background
+        // Successfully updated the post
+        console.log("This is what is in the imageAsset", imageAsset)
         navigate('/');
       })
       .catch((error) => {
@@ -123,10 +157,11 @@ const EditPin = ({ user }) => {
     } else {
       // If the user clicks the submit button, but the fields are empty, we set the "fields" state to true, which will trigger the "Please fill all the details in the form" message... 
       setFields(true);
-      console.log(title)
-      console.log(about)
-      console.log(imageAsset)
-      console.log(category)
+      // console.log(title)
+      // console.log(about)
+      // console.log(imageAsset)
+      // console.log(category)
+
       // For a duration of 2 seconds.
       setTimeout(() => setFields(false), 2000)
     }
@@ -189,7 +224,20 @@ const EditPin = ({ user }) => {
           ) : (
             // If the user has already uploaded the image, then display that image, and give them a button for deleting it
             <div className='relative h-full'>
-              <img src={imageAsset} alt='uploaded-pic' className='h-full w-full object-cover' />
+              {/* 
+                The working of the 'src' mechanism.
+
+                The initial value of imageAsset after coming on the edit post after clicking the edit button, will directly be the url. So for that, typing imageAsset.url doesn't have any
+                meaning.
+                
+                But after the user uploads an image, the value of the imageAsset will be an object,
+                which will have a 'url' property.
+
+                The justClickedEdit hook will work as a flag. If the user came after clicking the edit button, the "flag" will be set to true, the value of src will directly be the value of imageAsset, and the image will be properly displayed. 
+                
+                After the user clicks "upload button", the "flag" will be set to false, and after that, when the user uploads the pic, the value of 'src' will be 'imageAsset.url' 
+              */}
+              <img src={ justClickedEdit ? imageAsset : imageAsset.url} alt='uploaded-pic' className='h-full w-full object-cover' />
               <button
                 type='button'
                 className='absolute bottom-3 right-3 p-3 rounded-full bg-white text-xl cursor-pointer outline-none hover:shadow-md transition-all duration-500 ease-in-out'
