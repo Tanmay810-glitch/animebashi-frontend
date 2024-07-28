@@ -42,5 +42,9 @@ Allows you to delete your post
 
 Allows you to save any post you like, for later viewing.
 
+## Misc
+
+Also, expect more documentation to be added
+
 **Note: Attribution is provided for post pics and carousel pics that are not mine**
 
