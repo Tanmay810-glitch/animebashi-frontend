@@ -10,6 +10,10 @@ Following are the features you can currently perform in it:
 
 You can add a post by simply clicking the "Plus" button and entering the required details
 
+## Edit post 
+
+With this, you can correct any typos you might have in your post.
+
 ### Add a comment
 
 There is a comment section under every post
@@ -28,23 +32,17 @@ You can edit your profile banner by clicking on the "Pencil" icon on the left si
 
 ## Features under development
 
-## Edit post 
-
-With this, you can correct any typos you might have in your post.
-
-I'm currently facing problems in the edit post feature. The specifics of it are documented in the code, where the problem actually occurs.
-
-## Delete post 
+### Delete post 
 
 Allows you to delete your post
 
-## Save post
+### Save post
 
 Allows you to save any post you like, for later viewing.
 
 ## Misc
 
-Also, expect more documentation to be added
+Also, expect more documentation to be added in the future
 
-**Note: Attribution is provided for post pics and carousel pics that are not mine**
+**Note: Attribution is provided for post pics and carousel pics used for demonstration, that are not mine**
 
