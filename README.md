@@ -14,6 +14,10 @@ You can add a post by simply clicking the "Plus" button and entering the require
 
 With this, you can correct any typos you might have in your post.
 
+### Delete post 
+
+Allows you to delete your post
+
 ### Add a comment
 
 There is a comment section under every post
@@ -32,9 +36,7 @@ You can edit your profile banner by clicking on the "Pencil" icon on the left si
 
 ## Features under development
 
-### Delete post 
 
-Allows you to delete your post
 
 ### Save post
 

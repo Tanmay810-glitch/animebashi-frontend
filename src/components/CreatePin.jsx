@@ -273,7 +273,7 @@ const CreatePin = ({ user }) => {
                       onClick={savePin}
                       className='bg-white text-[#06A7F7] hover:bg-[#06A7F7] hover:text-white transition duration-500 font-bold p-2 rounded-full w-28 outline-none'
                     >
-                      Save Pin
+                      Submit
                     </button>
               </div>
             </div>

@@ -9,12 +9,12 @@ import { fetchUser } from '../utils/fetchUser';
 
 const Pin = ({ pin: { postedBy, image, _id, title, save, about } }) => {
 
-  const [postHovered, setPostHovered] = useState(false);
+  // const [postHovered, setPostHovered] = useState(false);
 
 
   const navigate = useNavigate();
 
-  const user = fetchUser(); 
+  // const user = fetchUser(); 
 
 
 
@@ -23,46 +23,46 @@ const Pin = ({ pin: { postedBy, image, _id, title, save, about } }) => {
   // It works like this:
   // 0 -> !0 -> true -> !true -> false
   // 1 -> !1 -> false -> !false -> true
-  const alreadySaved = !!(save?.filter((item) => item.postedBy._id === user.sub))?.length;
+  // const alreadySaved = !!(save?.filter((item) => item.postedBy._id === user.sub))?.length;
 
-  const savePin = (id) => {
-    if(!alreadySaved) {
+  // const savePin = (id) => {
+  //   if(!alreadySaved) {
 
 
-      client
-        .patch(id)
-        .setIfMissing({save: []})
-        .insert('after', 'save[-1]', [{
-          _key: uuidv4(),
-          userId: user.sub,
-          postedBy: {
-            _type: 'postedBy',
-            _ref: user.sub
-          }
-        }])
-        .commit()
-        .then(() => {
-          window.location.reload();
-        })
-    }
-  }
+  //     client
+  //       .patch(id)
+  //       .setIfMissing({save: []})
+  //       .insert('after', 'save[-1]', [{
+  //         _key: uuidv4(),
+  //         userId: user.sub,
+  //         postedBy: {
+  //           _type: 'postedBy',
+  //           _ref: user.sub
+  //         }
+  //       }])
+  //       .commit()
+  //       .then(() => {
+  //         window.location.reload();
+  //       })
+  //   }
+  // }
 
-  const deletePin = (id) => {
-    client 
-      .delete(id)
-      .then(() => {
-        window.location.reload();
-      })
+  // const deletePin = (id) => {
+  //   client 
+  //     .delete(id)
+  //     .then(() => {
+  //       window.location.reload();
+  //     })
 
-  }
+  // }
 
 
   return (
     <div className='m-2 '>
         {/* Renders the pin */}
         <div
-          onMouseEnter={() => setPostHovered(true)}
-          onMouseLeave={() => setPostHovered(false)}
+          // onMouseEnter={() => setPostHovered(true)}
+          // onMouseLeave={() => setPostHovered(false)}
           onClick={() => navigate(`/pin-detail/${_id}`)}
           className='relative rounded-xl cursor-pointer bg-[#2A2C3E] mt-4 shadow-md transition-all duration-400 overflow-hidden hover:shadow-xl hover:transform hover:translate-y-[-1px] hover:scale-105 hover:z-10'
         >

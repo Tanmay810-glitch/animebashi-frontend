@@ -184,11 +184,11 @@ const EditPin = ({ user }) => {
     )}
 
     {/* For rendering the whole "Create Pin" form */}
-    <div className='flex lg:flex-col flex-col justify-center items-center bg-white lg:p-5 p-3 lg:w-4/5 w-full'>
+    <div className='flex lg:flex-col flex-col rounded-lg justify-center items-center bg-[#2A2C3E]  lg:p-5 p-3 w-full'>
 
       {/* Renders the left side of the "Create Pin" block (The "upload image" button) */}
-      <div className='bg-secondaryColor p-3 flex flex-0.7 w-full'>
-        <div className='flex justify-center items-center flex-col border-2 border-dotted border-gray-300 p-3 w-full h-420'>
+      <div className='bg-[#393c54] p-3 flex flex-0.7 rounded-lg w-full'>
+        <div className='flex justify-center items-center flex-col border-2 border-dotted rounded-lg border-gray-300 p-3 w-full h-420'>
 
           {/* Appears when the image is loading */}
           {loading && <Spinner />}
@@ -261,14 +261,14 @@ const EditPin = ({ user }) => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder='Add your title here'
-            className='outline-none text-xl font-bold border-b-2 border-gray-200 p-2'
+            className='outline-none bg-[#393c54] rounded-md text-white text-xl font-bold border-b-2 border-gray-200 focus:border-[#06A7F7] transition duration-500 p-2'
           />
 
             {/* Renders the image of the user, if they exist */}
           {user && (
             // Renders the image of the user
             <div
-            className='flex gap-2 my-2 items-center bg-white rounded-lg'
+            className='flex gap-2 my-2 items-center bg-[#2A2C3E] text-white rounded-lg'
             >
               <img 
                 src={user.image}
@@ -290,14 +290,14 @@ const EditPin = ({ user }) => {
                             } 
                       }
             placeholder='What is your pin about'
-            className='outline-none text-base sm:text-lg border-b-2 border-gray-200 p-2'
+            className='outline-none text-base sm:text-lg bg-[#393c54] text-white rounded-md border-b-2 border-gray-200 transition duration-500 focus:border-[#06A7F7] p-2'
             
             
           />
             {/* e.target.textlength and e.target.cols 
                 (e) => e.target.textlength%112 === 0 ? e.target.rows++ : 1
             */}
-            {/* For pasting the link of the image you are going to post (Remove this feature)  */}
+            {/* For pasting the link of the image you are going to post (Deprecated: Remove this feature)  */}
           {/* <input 
             type='text'
             value={destination}
@@ -310,12 +310,12 @@ const EditPin = ({ user }) => {
           <div className='flex flex-col'>
             {/* Renders the category option */}
             <div>
-              <p className='mb-2 font-semibold text-lg sm:text-xl'>Choose Pin Category</p>
+              <p className='mb-2 font-semibold text-lg text-white sm:text-xl'>Choose Pin Category</p>
 
               {/* For creating the select category options menu */}
               <select
                 onChange={(e) => setCategory(e.target.value)}
-                className='outline-none w-4/5 text-base border-b-2 border-gray-200 p-2 rounded-md cursor-pointer'
+                className='outline-none bg-[#393c54] w-4/5 text-white text-base border-b-2 border-gray-200 p-2 rounded-md cursor-pointer transition duration-500 focus:border-[#06A7F7]'
               >
 
                 {/* For creating an options menu of which category the user wants to post their pin in  */}
@@ -324,7 +324,7 @@ const EditPin = ({ user }) => {
                 {/* Renders the available categories in the options menu  */}
                 {categories.map((category) => (
                   <option 
-                    className='text-base border-0 outline-none capitalize bg-white text-black'
+                    className='text-base border-0 outline-none capitalize bg-[#393c54] text-white'
                     key={category.name}
                   >
                     {category.name}
@@ -338,9 +338,9 @@ const EditPin = ({ user }) => {
                   <button
                     type='button'
                     onClick={savePin}
-                    className='bg-red-500 text-white font-bold p-2 rounded-full w-28 outline-none'
+                    className='bg-white text-[#06A7F7] hover:bg-[#06A7F7] hover:text-white transition duration-500 font-bold p-2 rounded-full w-28 outline-none'
                   >
-                    Save Pin
+                    Save
                   </button>
             </div>
           </div>

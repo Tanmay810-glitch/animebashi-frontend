@@ -26,7 +26,6 @@ const Feed = () => {
       client.fetch(query)
         .then((data) => {
           setPins(data);
-          console.log(data);
           setLoading(false);
         })
     } else {
@@ -45,11 +44,12 @@ const Feed = () => {
 
   return (
     <div>
-      
+      {/* Renders the carousel */}
       <div className='bg-[#393c54] mt-2 mb-2'>
         <Carousel/>
       </div>
 
+      {/* Renders the pins */}
       <h1 className='text-3xl text-white font-bold mt-8 ml-3'>What people are talking about!</h1> 
       {pins && <MasonryLayout pins={pins} />}
     </div>

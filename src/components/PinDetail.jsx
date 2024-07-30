@@ -7,7 +7,7 @@ import {client, urlFor} from '../client'
 import MasonryLayout from './MasonryLayout';
 import { pinDetailMorePinQuery, pinDetailQuery } from '../utils/data';
 import Spinner from './Spinner';
-import { AiFillEdit, AiOutlineLogout } from 'react-icons/ai';
+import { AiFillDelete, AiFillEdit, AiOutlineLogout } from 'react-icons/ai';
 
 const PinDetail = ({user}) => {
 
@@ -16,6 +16,7 @@ const PinDetail = ({user}) => {
   const [comment, setComment] = useState('');
   const [addingComment, setAddingComment] = useState(false);
   const [pinUserId, setPinUserId] = useState(null)
+  const [goingToDelete, setGoingToDelte] = useState(false)
   const navigate = useNavigate();
   const { pinId } = useParams();
   const { userId } = useParams();
@@ -60,6 +61,11 @@ const PinDetail = ({user}) => {
     navigate('/EditPin');
   }
 
+  const handleDelete = () => {
+    // This will allow the pop-up box asking the user if they are sure about deleting post, will appear
+    setGoingToDelte(true)
+  }
+
   useEffect(() => {
     fetchPinDetails();
   }, [pinId])
@@ -67,32 +73,93 @@ const PinDetail = ({user}) => {
   if(!pinDetail) return <Spinner message="Loading pin..." />
 
   return (
+    
     <>
 
       {/* Render the whole pin detail page  */}
       <div className='flex xl:flex-column flex-col m-auto bg-[#2A2C3E]' style={{maxWidth: '1500px', borderRadius: '32px'}}>
-
-
+  
     
         {/* Render the pin */}
         <div className='flex relative justify-center items-center md:items-start flex-initial'>
 
+        {/* Conditional Render: It will only appear if the user clicks on the delete icon, setting goingToDelete to true */}
+        {goingToDelete && <div className='absolute z-10 flex flex-col justify-center items-center top-0 right-0 left-0 bottom-0 rounded-t-3xl bg-blackOverlay'>
+
+            <div className='bg-white rounded-lg flex flex-col items-center p-4 transition-all animate-in slide-in-from-top-20'>
+                <h1 className='text-2xl font-bold my-2'>
+                  Warning!
+                </h1>
+
+                <hr className='w-80 border-t border-gray-950 my-1'/>
+
+                <p className='my-2'>
+                  Are you sure you want to delete the post?
+                </p>
+
+                <p className='text-sm text-gray-500 my-2'>(Note: It may take a while to delete)</p>
+
+                <div className='flex flex-row my-2'>
 
 
+                  {/* If the user clicks no, the goingToDelete will be set to false, and the pop-up box will go away */}
+                  <button 
+                    className='mr-5 py-2 w-28 rounded-full bg-secondaryColor cursor-pointer outline-none hover:shadow-lg transition-all duration-500 ease-in-out'
+                    onClick={() => setGoingToDelte(false)}
+                  >
+                    No
+                  </button>
+
+                   {/* If the user clicks on yes, we delete the post */}
+                    <button 
+                    className='bg-red-500 text-white font-bold p-2 rounded-full w-28 outline-none'
+                    onClick={()=>{
+                      client.delete(pinId)
+                      .then(() => {
+                        window.alert('Post deleted')
+                        navigate('/');
+                      })
+                      .catch((err) => {
+                        window.alert("The post didn't get deleted becuase: ", err.message)
+                      })
+                    }}  
+                  >
+                    Yes
+                  </button>
+
+                </div>
+
+              </div>
+        </div>}
           <img 
             src={pinDetail?.image?.asset?.url} 
             className='rounded-t-3xl rounded-b-lg w-full'
             alt='user-post'
           />
+
+          
           {/* Render the edit button only for the user who created it. */}
-          {pinUserId === user._id && 
+          
+          {pinUserId === user?._id && 
           <div 
             className='absolute top-2 right-2 z-1000  bg-white p-2 rounded-full cursor-pointer shadow-md'
             onClick={() => navigate(`/pin-edit/${pinId}`)}
             >
+ 
             <Link to={'/EditPin'}>
               <AiFillEdit color='grey'fontSize={21}/>
             </Link>
+          </div>}
+          
+
+          {/* Render the delete button only for the user who created it. */}
+          {pinUserId === user?._id && 
+          <div 
+            className='absolute top-2 left-2 z-1000 bg-white p-2 rounded-full cursor-pointer shadow-md'
+            onClick={handleDelete}
+            >
+              <AiFillDelete color='red'fontSize={21}/>
+            
           </div>}
 
     
@@ -127,27 +194,28 @@ const PinDetail = ({user}) => {
 
             {/* Render the title of the pin */}
             <h1 className='text-4xl text-center text-white font-bold break-words mt-3'>
-              {pinDetail.title}
+              {pinDetail?.title}
             </h1>
 
             {/* Render the description of the pin */}
             <p className='mt-3 text-center text-white'>
-              {pinDetail.about}
+              {pinDetail?.about}
             </p>
           </div>
+          
 
           {/* Render the details of the user who posted the pin */}
-          <Link to={`/user-profile/${pinDetail.postedBy?._id}`}  className="flex gap-2 mt-5 items-center bg-[#2A2C3E] text-white hover:text-[#06A7F7] rounded-lg">
+          <Link to={`/user-profile/${pinDetail?.postedBy?._id}`}  className="flex gap-2 mt-5 items-center bg-[#2A2C3E] text-white hover:text-[#06A7F7] rounded-lg">
 
             {/* The user's profile pic */}
             <img 
               className='w-8 h-8 rounded-full object-cover'
-              src={pinDetail.postedBy?.image}
+              src={pinDetail?.postedBy?.image}
               alt='user-profile'
             />
 
             {/* Ṭhe user's name */}
-            <p className='font-semibold capitalize text-sm'>{pinDetail.postedBy?.userName}</p>
+            <p className='font-semibold capitalize text-sm'>{pinDetail?.postedBy?.userName}</p>
           </Link>
 
           {/* For rendering the comment section */}
@@ -156,18 +224,18 @@ const PinDetail = ({user}) => {
 
             {/* Ṛender comments from other users, if any */}
             {pinDetail?.comments?.map((item) => (
-                  <div className="flex gap-2 mt-5 items-center bg-[#2A2C3E] rounded-lg" key={item.comment}>
+                  <div className="flex gap-2 mt-5 items-center bg-[#2A2C3E] rounded-lg" key={item?.comment}>
                     {/* Render Profile pic of the poster */}
                     <img
-                      src={item.postedBy?.image}
+                      src={item?.postedBy?.image}
                       className="w-10 h-10 rounded-full"
                       alt="user-profile"
                     />
 
                     {/* Render the name of the poster who posted the comment, and their comment */}
                     <div className="flex flex-col">
-                      <p className="font-bold text-white">{item.postedBy?.userName}</p>
-                      <p className='text-white'>{item.comment}</p>
+                      <p className="font-bold text-white">{item?.postedBy?.userName}</p>
+                      <p className='text-white'>{item?.comment}</p>
                     </div>
                   </div>
                 ))}
@@ -207,15 +275,22 @@ const PinDetail = ({user}) => {
       </div>
       {/* {console.log(pins)} */}
 
+
+
       
       {
         // If there are pins with the same category as this one, render them below
         pins?.length > 0 ? (
           /* The "More like this" part below the detailed pin */
           <>
+            {goingToDelete && <div className='absolute z-1000 flex flex-col justify-center items-center top-0 right-0 left-0 bottom-0 h-full w-full bg-blackOverlay'>
+                    
+            </div>}
+
             <h1 className='text-center font-bold text-2xl text-white mt-8 mb-4'>
               More like this
             </h1>
+            
               <MasonryLayout pins={pins} />
           </>
       ) :(
