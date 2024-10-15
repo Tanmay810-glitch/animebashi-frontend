@@ -222,7 +222,7 @@ const PinDetail = ({user, isUserLoggedIn}) => {
           <div>
               <div className='flex justify-between'>
                     {/* Render the title of the pin */}
-                    <h1 className='text-4xl text-white ml-96 text-center font-bold break-words mt-3'>
+                    <h1 className='text-4xl text-white font-bold break-words mt-3'>
                       {pinDetail?.title}
                     </h1>
 
