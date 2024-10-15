@@ -1,13 +1,14 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { IoMdAdd, IoMdSearch } from 'react-icons/io';
-const Navbar = ({ searchTerm, setSearchTerm, user }) => {
+const Navbar = ({ searchTerm, setSearchTerm, user, isUserLoggedIn }) => {
 
   // We'll be using this to navigate to the search page
   const navigate = useNavigate();
 
-  // Won't appear the user is not logged in.
-  if(!user) return null;
+  const handleLogin = () => {
+    navigate('/login');
+  }
 
   return (
     // Renders the search bar
@@ -27,15 +28,24 @@ const Navbar = ({ searchTerm, setSearchTerm, user }) => {
         />
       </div>
 
-      {/* Renders the user profile and create pin buttons */}
+      {/* If the user is logged in, the div renders the user profile and create pin buttons, if not, then it renders the Log In button */}
       <div className='flex gap-3'>
-        <Link to={`/user-profile/${user?._id}`} className="hidden md:block">
-          <img src={user.image} alt='user' className='w-16 h-12 rounded-lg hover:shadow-xl hover:transform hover:translate-y-[-1px] hover:scale-110 transition duration-500' />
+        {isUserLoggedIn ? (<><Link to={`/user-profile/${user?._id}`} className="hidden md:block">
+          <img src={user?.image} alt='user' className='w-16 h-12 rounded-lg hover:shadow-xl hover:transform hover:translate-y-[-1px] hover:scale-110 transition duration-500' />
         </Link>
 
-        <Link to={`/create-pin`} className="bg-white text-[#06A7F7] hover:bg-[#06A7F7] hover:text-white transition duration-500 rounded-lg w-12 h-12 md:w-16 md:h-12 flex justify-center items-center">
+          <Link to={`/create-pin`} className="bg-white text-[#06A7F7] hover:bg-[#06A7F7] hover:text-white transition duration-500 rounded-lg w-12 h-12 md:w-16 md:h-12 flex justify-center items-center">
           <IoMdAdd />
-        </Link>
+          </Link></>
+          ) : (<button
+            type='button'
+            onClick={handleLogin}
+            className='bg-white text-[#06A7F7] hover:bg-[#06A7F7] hover:text-white transition duration-500 font-bold p-2 rounded-full w-28 outline-none'
+          >
+            Log In
+          </button>)}
+
+
       </div>
     </div>
   )

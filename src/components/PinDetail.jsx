@@ -7,16 +7,19 @@ import {client, urlFor} from '../client'
 import MasonryLayout from './MasonryLayout';
 import { pinDetailMorePinQuery, pinDetailQuery } from '../utils/data';
 import Spinner from './Spinner';
-import { AiFillDelete, AiFillEdit, AiOutlineLogout } from 'react-icons/ai';
+import { AiFillBook, AiFillDelete, AiFillEdit, AiFillFileMarkdown, AiFillSave, AiOutlineLogout } from 'react-icons/ai';
+import { CiBookmarkPlus, CiBookmarkCheck } from "react-icons/ci";
 
-const PinDetail = ({user}) => {
+
+const PinDetail = ({user, isUserLoggedIn}) => {
 
   const [pins, setPins] = useState(null)
   const [pinDetail, setPinDetail] = useState(null);
   const [comment, setComment] = useState('');
   const [addingComment, setAddingComment] = useState(false);
   const [pinUserId, setPinUserId] = useState(null)
-  const [goingToDelete, setGoingToDelte] = useState(false)
+  const [goingToDelete, setGoingToDelte] = useState(false);
+  const [savedPin, setSavedPin] = useState(false);
   const navigate = useNavigate();
   const { pinId } = useParams();
   const { userId } = useParams();
@@ -36,6 +39,32 @@ const PinDetail = ({user}) => {
           setAddingComment(false);
         });
     }
+  };
+
+  const handleSavePin = (pinId) => {
+    // if (alreadySaved?.length === 0) {
+      // setSavingPost(true);
+
+      client
+        .patch(pinId)
+        .setIfMissing({ save: [] })
+        .insert('after', 'save[-1]', [{
+          _key: uuidv4(),  
+          postedBy: {
+            _type: 'postedBy',
+            _ref: user?.googleId,
+          },
+          userId: user?.googleId,
+        }])
+        .commit()
+        .then(() => {
+          window.location.reload();
+          // setSavingPost(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    
   };
 
   const fetchPinDetails = () => {
@@ -140,7 +169,7 @@ const PinDetail = ({user}) => {
           
           {/* Render the edit button only for the user who created it. */}
           
-          {pinUserId === user?._id && 
+          {isUserLoggedIn && pinUserId === user?._id && 
           <div 
             className='absolute top-2 right-2 z-1000  bg-white p-2 rounded-full cursor-pointer shadow-md'
             onClick={() => navigate(`/pin-edit/${pinId}`)}
@@ -149,11 +178,11 @@ const PinDetail = ({user}) => {
             <Link to={'/EditPin'}>
               <AiFillEdit color='grey'fontSize={21}/>
             </Link>
-          </div>}
+          </div> }
           
 
           {/* Render the delete button only for the user who created it. */}
-          {pinUserId === user?._id && 
+          {isUserLoggedIn && pinUserId === user?._id && 
           <div 
             className='absolute top-2 left-2 z-1000 bg-white p-2 rounded-full cursor-pointer shadow-md'
             onClick={handleDelete}
@@ -191,14 +220,25 @@ const PinDetail = ({user}) => {
 
           {/* Render the details of the pin */}
           <div>
+              <div className='flex justify-between'>
+                    {/* Render the title of the pin */}
+                    <h1 className='text-4xl text-white ml-96 text-center font-bold break-words mt-3'>
+                      {pinDetail?.title}
+                    </h1>
 
-            {/* Render the title of the pin */}
-            <h1 className='text-4xl text-center text-white font-bold break-words mt-3'>
-              {pinDetail?.title}
-            </h1>
+                    {/* Render the save post button */}
+                    {isUserLoggedIn && pinUserId !== user?._id && 
+                        <div 
+                          className='bg-white text-[#06A7F7] hover:bg-[#06A7F7] hover:text-white transition duration-500 font-bold p-2 rounded-full cursor-pointer outline-none'
+                          onClick={handleSavePin}
+                          >
+                            <CiBookmarkPlus fontSize={35} />
+                        </div>}
+              </div>
+
 
             {/* Render the description of the pin */}
-            <p className='mt-3 text-center text-white'>
+            <p className='mt-3 text-white'>
               {pinDetail?.about}
             </p>
           </div>
@@ -223,9 +263,9 @@ const PinDetail = ({user}) => {
           <div className='max-h-370 overflow-y-auto'>
 
             {/* Ṛender comments from other users, if any */}
-            {pinDetail?.comments?.map((item) => (
+            {pinDetail?.comments?.map((item) => ( 
                   <div className="flex gap-2 mt-5 items-center bg-[#2A2C3E] rounded-lg" key={item?.comment}>
-                    {/* Render Profile pic of the poster */}
+                    {/* Render Profile pic of the comment poster */}
                     <img
                       src={item?.postedBy?.image}
                       className="w-10 h-10 rounded-full"
@@ -242,35 +282,35 @@ const PinDetail = ({user}) => {
           </div>
 
           {/* Renders the comment input field (The pic of the poster, input field, and the button for posting the comment) */}
-          <div className='flex flex-wrap mt-6 gap-3'>
+          {isUserLoggedIn && <div className='flex flex-wrap mt-6 gap-3'>
+              {/* Renders the profile pic of the user who is posting the comment, and provides a link to their profile */}
+                <Link to={`/user-profile/${user._id}`}>
+                  <img 
+                    className='w-10 h-10 rounded-full cursor-pointer'
+                    src={user?.image}
+                    alt='user-profile'
+                  />
+                </Link>
 
-            {/* Renders the profile pic of the user who is posting the comment, and provides a link to their profile */}
-            <Link to={`/user-profile/${user._id}`}>
-              <img 
-                className='w-10 h-10 rounded-full cursor-pointer'
-                src={user?.image}
-                alt='user-profile'
+              {/* Renders the input field for the comment */}
+              <input 
+                className=" flex-1 border-gray-100 text-white bg-[#393c54] outline-none border-2 p-2 rounded-2xl focus:border-[#06A7F7] transition duration-500"
+                type="text"
+                placeholder="Add a comment"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
               />
-            </Link>
 
-            {/* Renders the input field for the comment */}
-            <input 
-              className=" flex-1 border-gray-100 text-white bg-[#393c54] outline-none border-2 p-2 rounded-2xl focus:border-[#06A7F7] transition duration-500"
-              type="text"
-              placeholder="Add a comment"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-            />
+              {/* Renders the button for posting the comment */}
+              <button
+                type="button"
+                className="bg-white text-[#06A7F7] hover:bg-[#06A7F7] hover:text-white transition duration-500 rounded-full px-6 py-2 font-semibold text-base outline-none"
+                onClick={addComment}
+              >
+                {addingComment ? 'Posting the comment' : 'Post'}
+              </button>
+            </div>}
 
-            {/* Renders the button for posting the comment */}
-            <button
-              type="button"
-              className="bg-white text-[#06A7F7] hover:bg-[#06A7F7] hover:text-white transition duration-500 rounded-full px-6 py-2 font-semibold text-base outline-none"
-              onClick={addComment}
-            >
-              {addingComment ? 'Posting the comment' : 'Post'}
-            </button>
-          </div>
         </div>
       </div>
       {/* {console.log(pins)} */}
@@ -283,6 +323,7 @@ const PinDetail = ({user}) => {
         pins?.length > 0 ? (
           /* The "More like this" part below the detailed pin */
           <>
+            {/* Overlay for when the user wants to delete their post. */}
             {goingToDelete && <div className='absolute z-1000 flex flex-col justify-center items-center top-0 right-0 left-0 bottom-0 h-full w-full bg-blackOverlay'>
                     
             </div>}
