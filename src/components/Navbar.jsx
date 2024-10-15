@@ -40,7 +40,19 @@ const Navbar = ({ searchTerm, setSearchTerm, user, isUserLoggedIn }) => {
           ) : (<button
             type='button'
             onClick={handleLogin}
-            className='bg-white text-[#06A7F7] hover:bg-[#06A7F7] hover:text-white transition duration-500 font-bold p-2 rounded-full w-28 outline-none'
+            className='hidden md:block md:(
+                    bg-white 
+                    text-[#06A7F7] 
+                    hover:bg-[#06A7F7] 
+                    hover:text-white 
+                      transition 
+                      duration-500 
+                      font-bold 
+                      p-2 
+                      rounded-full 
+                      w-28 
+                      outline-none
+                    )'
           >
             Log In
           </button>)}
