@@ -41,31 +41,58 @@ const PinDetail = ({user, isUserLoggedIn}) => {
     }
   };
 
-  const handleSavePin = (pinId) => {
-    // if (alreadySaved?.length === 0) {
-      // setSavingPost(true);
-
-      client
-        .patch(pinId)
+  const handleSavePin = async (pinId) => {
+    try {
+      if (!pinId || !user?.googleId) return;
+  
+      const response = await client.patch(pinId)
         .setIfMissing({ save: [] })
-        .insert('after', 'save[-1]', [{
-          _key: uuidv4(),  
-          postedBy: {
-            _type: 'postedBy',
-            _ref: user?.googleId,
+        .insert('after', 'save[-1]', [
+          {
+            _key: uuidv4(),
+            postedBy: { _type: 'postedBy', _ref: user.googleId },
+            userId: user.googleId,
           },
-          userId: user?.googleId,
-        }])
+        ])
         .commit()
-        .then(() => {
-          window.location.reload();
-          // setSavingPost(false);
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-    
+        
+  
+      // No need to reload the entire page; update your state instead
+      // window.location.reload();
+  
+      // Update your state here, e.g., setSavingPost(false)
+      console.log(response)
+      console.log('Pin saved successfully!');
+    } catch (error) {
+      console.error('Error saving pin:', error);
+    }
   };
+  
+  // const handleSavePin = (pinId) => {
+  //   // if (alreadySaved?.length === 0) {
+  //     // setSavingPost(true);
+
+  //     client
+  //       .patch(pinId)
+  //       .setIfMissing({ save: [] })
+  //       .insert('after', 'save[-1]', [{
+  //         _key: uuidv4(),  
+  //         postedBy: {
+  //           _type: 'postedBy',
+  //           _ref: user?.googleId,
+  //         },
+  //         userId: user?.googleId,
+  //       }])
+  //       .commit()
+  //       .then(() => {
+  //         window.location.reload();
+  //         // setSavingPost(false);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       })
+    
+  // };
 
   const fetchPinDetails = () => {
     let query = pinDetailQuery(pinId);

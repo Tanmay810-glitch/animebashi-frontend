@@ -19,7 +19,9 @@ const Sidebar = ({ user, closeToggle }) => {
 
   return (
     <div className='flex flex-col justify-between bg-[#393c54] h-full overflow-y-scroll min-w-210 hide-scrollbar'>
+      {/* Renders the website logo */}
       <div className='flex flex-col'>
+        {/* Renders the close button for mobile devices */}
         <Link
           to="/"
           className='flex px-5 gap-2 my-6 pt-1 w-191 items-center'
@@ -28,7 +30,9 @@ const Sidebar = ({ user, closeToggle }) => {
           <img src={logo} alt="logo" className='w-full' />
         </Link>
 
+        {/*  */}
         <div className='flex  flex-col gap-5' >
+          {/* Renders home button */}
           <NavLink  
             to="/"
             className={({ isActive }) => isActive ? isActiveStyle : isNotActiveStyle }
