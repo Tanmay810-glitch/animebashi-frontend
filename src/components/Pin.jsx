@@ -103,7 +103,7 @@ const Pin = ({ pin: { postedBy, image, _id, title, save, about } }) => {
             {/* Overlay container */}
             <div className="absolute bottom-0 left-0 w-full p-2 bg-gradient-to-t from-black to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 ease-out">
                 {/* Image title */}
-                <h3 className="font-bold text-white hover:text-[#06A7F7] transition-color duration-300 ease-out" style={{ fontSize: `${fontSize/3.4}px` }}
+                <h3 className="font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] hover:text-[#06A7F7] transition-color duration-300 ease-out" style={{ fontSize: `${fontSize/3.4}px` }}
 
                      >
                   {title}
